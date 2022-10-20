@@ -1,0 +1,35 @@
+version: '3'
+services:
+    mysql:
+        image: mysql:8.0
+        container_name: mysql
+        ports:
+        - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: "cde2b851043fc4a38aad5c6d"
+        volumes:
+        - ./init.sql:/docker-entrypoint-initdb.d/init.sql:rw
+        - ./mysql_data:/var/lib/mysql
+        command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    nginx:
+        image: nginx:latest
+        ports:
+            - "80:80"
+        depends_on:
+            - "php"
+        volumes:
+            - "$PWD/conf.d:/etc/nginx/conf.d"
+            - "$PWD:/usr/share/nginx/html"
+        container_name: "nginx"
+    php:
+        # build: ./php-mysqli
+        build: .
+        # image指定build Dockerfile生成镜像的名称
+        image: php:7.4
+        restart: always
+        ports:
+            - "9000:9000"
+        volumes:
+            - "$PWD:/var/www/html"
+        container_name: "compose-php"
+
