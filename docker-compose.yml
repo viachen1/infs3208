@@ -22,9 +22,7 @@ services:
             - "$PWD:/usr/share/nginx/html"
         container_name: "nginx"
     php:
-        # build: ./php-mysqli
         build: .
-        # image指定build Dockerfile生成镜像的名称
         image: php:7.4
         restart: always
         ports:
